@@ -69,15 +69,15 @@ def get_a_show(id):
     if db.getById('shows', int(id)) is None:
         return create_response(status=404, message="Sorry show with this ID Does not exist, yet.")
     else:
-        return create_response({"shows": db.getById('shows', int(id))})
+        return create_response(db.getById('shows', int(id)))
 
 @app.route("/shows", methods=['POST'])
 def post_a_show():
     # Error check
     if not "name" in request.json:
-        return create_response(status=422, message="No show name provided")
+        return create_response(status=422, message="name not provided in POST request body")
     elif not "episodes_seen" in request.json:
-        return create_response(status=422, message="No Episode watched information provided")
+        return create_response(status=422, message="episodes_seen not provided in POST request body")
 
     request.json["episodes_seen"] = int(request.json["episodes_seen"])
     
@@ -90,11 +90,11 @@ def post_a_show():
 def update_a_show(id):
     # If id cannot be found
     if db.getById('shows', int(id)) is None:
-        return create_response(status=404, message="id not found")
+        return create_response(status=404, message="show with provided id not found")
     if not "name" in request.json:
-        return create_response(status=422, message="No show name provided")
+        return create_response(status=422, message="name not provided in request body")
     elif not "episodes_seen" in request.json:
-        return create_response(status=422, message="No Episode watched information provided")
+        return create_response(status=422, message="episodes_seen not provided in request body")
 
     # Create a new json object with two values only
     temp_json = {}
